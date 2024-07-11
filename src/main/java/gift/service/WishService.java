@@ -6,10 +6,9 @@ import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class WishService {
@@ -21,10 +20,9 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<WishResponse> getWishesByMemberId(Long memberId) {
-        return wishRepository.findByMemberId(memberId).stream()
-                .map(this::convertToWishResponse)
-                .collect(Collectors.toList());
+    public Page<WishResponse> getWishesByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findByMemberId(memberId, pageable)
+                .map(this::convertToWishResponse);
     }
 
     public Wish addWish(Member member, Product product) {
